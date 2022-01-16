@@ -22,23 +22,24 @@ from attacks import *
 
 
 parser = argparse.ArgumentParser(description='GNN baselines on ogbgmol* data with Pytorch Geometrics')
-parser.add_argument('--gnn', type=str, default='gcn',
-                    help='GNN gin, gin-virtual, or gcn, or gcn-virtual (default: gin-virtual)')
+parser.add_argument('--gnn', type=str, default='randomgin',
+                    help='GNN gin, gin-virtual, or gcn, or gcn-virtual, or randomgin, or randomgin-virtual'
+                         '(default: randomgin)')
 parser.add_argument('--drop_ratio', type=float, default=0.5,
                     help='dropout ratio (default: 0.5)')
 parser.add_argument('--drop_path_p', type=float, default=0.01,
                     help='droppath ratio (default: 0.01)')
-parser.add_argument('--num_layer', type=int, default=5,
-                    help='number of GNN message passing layers (default: 5)')
-parser.add_argument('--emb_dim', type=int, default=300,
-                    help='dimensionality of hidden units in GNNs (default: 300)')
+parser.add_argument('--num_layer', type=int, default=12,
+                    help='number of GNN message passing layers (default: 12)')   # 5
+parser.add_argument('--emb_dim', type=int, default=200,
+                    help='dimensionality of hidden units in GNNs (default: 200)')   # 300
 parser.add_argument('--batch_size', type=int, default=32,
                     help='input batch size for training (default: 32)')
-parser.add_argument('--epochs', type=int, default=100,
-                    help='number of epochs to train (default: 100)')
+parser.add_argument('--epochs', type=int, default=10,
+                    help='number of epochs to train (default: 10)')
 parser.add_argument('--num_workers', type=int, default=0,
                     help='number of workers (default: 0)')
-parser.add_argument('--dataset', type=str, default="ogbg-molhiv",
+parser.add_argument('--dataset', type=str, default="ogbg-molpcba",
                     help='dataset name (default: ogbg-molhiv, ogbg-molpcba)')
 parser.add_argument('--feature', type=str, default="full",
                     help='full feature or simple feature')
@@ -50,7 +51,7 @@ parser.add_argument('--hidden_channels', type=int, default=64)
 parser.add_argument('--lr', type=float, default=0.001)
 parser.add_argument('--runs', type=int, default=10)
 
-parser.add_argument('--step-size', type=float, default=1e-3)
+parser.add_argument('--step-size', type=float, default=8e-3)    # 1e-3
 parser.add_argument('-m', type=int, default=3)
 parser.add_argument('--test-freq', type=int, default=1)
 parser.add_argument('--attack', type=str, default='flag')
@@ -205,7 +206,7 @@ def main():
 
         print(f'Run{run} val:{best_val}, test:{final_test}')
         with open(write_file_name + '_' + args.JK + '_run' + str(run) + '.txt', 'w') as f:
-        	f.write("""Run: {}\nVal {:.4f}\nTest: {:.4f}\n\n\n""".format(run, best_val, final_test))
+            f.write("""Run: {}\nVal {:.4f}\nTest: {:.4f}\n\n\n""".format(run, best_val, final_test))
         vals.append(best_val)
         tests.append(final_test)
         
